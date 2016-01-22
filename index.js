@@ -51,48 +51,42 @@ connection.on('connect', function(err){
         console.log("Error en el request: "+err); 
     });
     
-    request.on('row', function(columns){
-       columns.forEach(function(column){
-            
-        if(column.metadata.colName !='FIIdRegion' || column.metadata.colName !='FIIdDispositivo'){
-           
-            respuesta[column.metadata.colName]=column.value;
-         } 
-       });
-       // i++;
-       // console.log(i);
-       reporte.push(respuesta);
-       respuesta = {};
-    });
-    
-
     request.on('doneProc', function(rowCount, more, rows){
-       console.log("Finalizando Proc");
+       //console.log("Finalizando Proc");
     });
     
      request.on('doneInProc', function(rowCount, more, rows){
-       console.log("Finalizando In");
-       //console.log(reporte);
-       
-      //  json2csv({
-      //    data:reporte,
-      //    fields: campos
-      //   }, function(err, csv){
-      //       if(err) console.log(err);
-      //       //console.log(csv);
-      //   });
-       //console.log(rows);
+       //console.log("Finalizando In");
+      reporte=[];
+       //Para cada renglon
        rows.forEach(function(row){
-         if(row.metadata.colName !='FIIdRegion' || row.metadata.colName !='FIIdDispositivo'){
-            respuesta[row.metadata.colName]=row.value;
-         }
-         //console.log(row); 
-         //console.log("//////////////////////");
+         //Revisa Cada Columna
+         row.forEach(function(column){
+           //Deja solo las que necesitamos
+            if(column.metadata.colName !='FIIdRegion' || column.metadata.colName !='FIIdDispositivo'){
+            respuesta[column.metadata.colName]=column.value;
+            }
+         });
+        reporte.push(respuesta);
+        //console.log("insertando respuesta//////////////// :" + i++);
+        //console.log(respuesta);
+        respuesta = {};
        });
        // i++;
-       // console.log(i);
-       connection.close();
-        process.exit(0);
+        //console.log("Generando reporte CSV");
+        //Genera el Reporte en CSV
+        //  json2csv({
+        //  data:reporte,
+        //  fields: campos
+        // }, function(err, csv){
+        //     if(err) console.log(err);
+        //     console.log(csv);
+        // });
+      //console.log("Registros:" + rowCount);
+      //console.log("Reporte:" +reporte.length);
+      console.log(JSON.stringify(reporte));
+      connection.close();
+      process.exit(0);
     });
     connection.callProcedure(request);
 });
