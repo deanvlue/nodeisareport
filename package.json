@@ -9,6 +9,7 @@
   "author": "carlos muñoz <carlos.munoz@alsea.com.mx>",
   "license": "ISC",
   "dependencies": {
+    "azure-storage": "^0.7.0",
     "json2csv": "^3.1.0",
     "moment": "^2.11.1",
     "tedious": "^1.13.2"
