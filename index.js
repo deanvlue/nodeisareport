@@ -16,10 +16,13 @@ var config = {
     userName: 'reportesti',
     password: 'Alsea.15',
     server: 'w2z7yuuxg2.database.windows.net',
+ 
     options: {
       encrypt:true, 
       database:'alsea-isa-prod',
-      rowCollectionOnDone : true
+      rowCollectionOnDone : true,
+      connectionTimeout: 300000,
+      requestTimeout: 3000000
     }
 };
 
@@ -65,18 +68,6 @@ connection.on('connect', function(err){
 
     request.on('doneProc', function(rowCount, more, rows){
        console.log("Finalizando Proc");
-       //console.log(reporte);
-       
-      //  json2csv({
-      //    data:reporte,
-      //    fields: campos
-      //   }, function(err, csv){
-      //       if(err) console.log(err);
-      //       //console.log(csv);
-      //   });
-       console.log(reporte.length);
-       //connection.close();
-       // process.exit(0);
     });
     
      request.on('doneInProc', function(rowCount, more, rows){
@@ -90,7 +81,16 @@ connection.on('connect', function(err){
       //       if(err) console.log(err);
       //       //console.log(csv);
       //   });
-       console.log(rowCount);
+       //console.log(rows);
+       rows.forEach(function(row){
+         if(row.metadata.colName !='FIIdRegion' || row.metadata.colName !='FIIdDispositivo'){
+            respuesta[row.metadata.colName]=row.value;
+         }
+         //console.log(row); 
+         //console.log("//////////////////////");
+       });
+       // i++;
+       // console.log(i);
        connection.close();
         process.exit(0);
     });
