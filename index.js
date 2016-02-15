@@ -22,7 +22,7 @@ var accountKey = nconf.get("STORAGE_KEY");
 var campos = ["FIIdTienda", "FCNombre", "FDFechaFin", "8033", "8034", "8035", "8036", "8037","8038","8039","8040"];
 
 
-var sp = 'SPDetalleEncuestas';
+var sp = 'SPDetalleEncuestasFechas';
 
 
 var config = {
@@ -68,6 +68,10 @@ connection.on('connect', function(err){
       console.log("Generando Request...");
       
     });
+    
+    request.addParameter('pafechainicio',TYPES.VarChar,'2016-02-08');
+    request.addParameter('pafechafin',TYPES.VarChar,'2016-02-15');
+    
     
     request.on('doneProc', function(rowCount, more, rows){
        //console.log("Finalizando Proc");
@@ -175,7 +179,7 @@ function generaCSV(reporte){
   });
   
 
-  blobSvc.createBlockBlobFromText('isareporte', 'reporteisa.csv', csv, function(err, res, rep){
+  blobSvc.createBlockBlobFromText('isareporte', 'reporteisafechas.csv', csv, function(err, res, rep){
     if(err) console.log("Hubo un error" + err);
   
     if(rep.isSuccessful)
