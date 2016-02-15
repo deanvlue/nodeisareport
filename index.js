@@ -2,7 +2,9 @@ var Connection = require('tedious').Connection;
 var TYPES = require('tedious').TYPES;
 var Request = require('tedious').Request;
 
-var moment = require('moment');
+var moment = require('moment-timezone');
+moment().tz('America/Mexico_City');
+
 
 //var json2csv = require('json2csv');
 
@@ -23,6 +25,8 @@ var campos = ["FIIdTienda", "FCNombre", "FDFechaFin", "8033", "8034", "8035", "8
 
 
 var sp = 'SPDetalleEncuestasFechas';
+var ahora = moment().startOf('week').add(1,'days').format('YYYY-MM-DD');
+var domingo_pasado = moment().startOf('week').subtract(6,'days').format('YYYY-MM-DD');
 
 
 var config = {
@@ -62,15 +66,16 @@ connection.on('connect', function(err){
     console.log("Conectando ...");
     
     var request = new Request(sp, function(err){
-      if(err)
+      if(err){
         console.log("Error en el request: "+err); 
-        
+        process.exit(1);
+      }
       console.log("Generando Request...");
       
     });
     
-    request.addParameter('pafechainicio',TYPES.VarChar,'2016-02-08');
-    request.addParameter('pafechafin',TYPES.VarChar,'2016-02-15');
+    request.addParameter('pafechainicio',TYPES.Date, domingo_pasado);
+    request.addParameter('pafechafin',TYPES.Date, ahora);
     
     
     request.on('doneProc', function(rowCount, more, rows){
@@ -154,7 +159,7 @@ function generaCSV(reporte){
     //var fecha = stamp[0] +" "+stamp[1].split('.')[0];;
     
     //usando moment para deserializar fecha y ponerla en formato cadena
-    var fecha = moment(rows.FDFechaFin).format( 'YYYY-MM-DD HH:mm:ss');
+    var fecha = moment(rows.FDFechaFin).utc().format('YYYY-MM-DD HH:mm:ss');
     
     registro.Session_ID = fecha;
     registro.Device_Name= rows.FIIdTienda	+" "+ rows.FCNombre;
