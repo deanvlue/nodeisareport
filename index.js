@@ -21,12 +21,12 @@ var accountName = nconf.get("STORAGE_NAME");
 var accountKey = nconf.get("STORAGE_KEY");
 
 
-var campos = ["FIIdTienda", "FCNombre", "FDFechaFin", "8033", "8034", "8035", "8036", "8037","8038","8039","8040"];
+var campos = ["FIIdTienda", "FCNombre", "FDFechaFin", "8069", "8070", "8071", "8072", "8073","8074","8075","8076","8077","8078"];
 
 
 var sp = 'SPDetalleEncuestasFechas';
 var ahora = moment().startOf('week').add(1,'days').format('YYYY-MM-DD');
-var domingo_pasado = moment().startOf('week').subtract(6,'days').format('YYYY-MM-DD');
+var domingo_pasado = moment().startOf('week').subtract(7,'days').format('YYYY-MM-DD');
 
 
 var config = {
@@ -148,7 +148,7 @@ function generaCSV(reporte){
   
   var csv = "";
   
-  var header = "Session_ID,Device_Name,¿Qué tan satisfecho está con el servicio en general?,¿El restaurante estaba limpio y en buenas condiciones?,¿Nuestro personal fue amable?,¿Los alimentos cumplieron sus expectativas de sabor y calidad?,¿Te atendimos con rapidez?,¿La experiencia que recibí vale lo que pagué?,¿Cuál es tu Género?,¿Qué edad tienes?\r\n";
+  var header = "Session_ID,Device_Name,¿Qué tan satisfecho está con el servicio en general?,¿El restaurante estaba limpio y en buenas condiciones?,¿Nuestro personal fue amable?,¿Los alimentos cumplieron sus expectativas de sabor y calidad?,¿Te atendimos con rapidez?,¿La experiencia que recibí vale lo que pagué?,¿Qué tan probable es que recomiende Vips a un amigo o familiar?,En General ¿Los precios del Vips son?,¿Cuál es tu Género?,¿Qué edad tienes?\r\n";
   
   csv = header;
   
@@ -163,23 +163,27 @@ function generaCSV(reporte){
     
     registro.Session_ID = fecha;
     registro.Device_Name= rows.FIIdTienda	+" "+ rows.FCNombre;
-    registro['8033'] = rows['8033'] === null ? "NA" : rows['8033'];
-    registro['8034'] = rows['8034'] === null ? "NA" : rows['8034'];
-    registro['8035'] = rows['8035'] === null ? "NA" : rows['8035'];
-    registro['8036'] = rows['8036'] === null ? "NA" : rows['8036'];
-    registro['8037'] = rows['8037'] === null ? "NA" : rows['8037'];
-    registro['8038'] = rows['8038'] === null ? "NA" : rows['8038'];
-    registro['8039'] = rows['8039'] === null ? "NA" : genero[rows['8039']];
-    registro['8040'] = rows['8040'] === null ? "NA" : edad[rows['8040']];
+    registro['8069'] = rows['8069'] === null ? "NA" : rows['8069'];
+    registro['8070'] = rows['8070'] === null ? "NA" : rows['8070'];
+    registro['8071'] = rows['8071'] === null ? "NA" : rows['8071'];
+    registro['8072'] = rows['8072'] === null ? "NA" : rows['8072'];
+    registro['8073'] = rows['8073'] === null ? "NA" : rows['8073'];
+    registro['8074'] = rows['8074'] === null ? "NA" : rows['8074'];
+    registro['8075'] = rows['8075'] === null ? "NA" : rows['8075'];
+    registro['8076'] = rows['8076'] === null ? "NA" : rows['8076'];
+    registro['8077'] = rows['8077'] === null ? "NA" : genero[rows['8077']];
+    registro['8078'] = rows['8078'] === null ? "NA" : edad[rows['8078']];
     
     //console.log(registro);
-    line = registro.Session_ID +"," + registro.Device_Name +"," + registro['8033'] +"," + registro['8034'] +",";
-    line += registro['8035'] +",";
-    line += registro['8036'] +",";
-    line += registro['8037'] +",";
-    line += registro['8038'] +",";
-    line += registro['8039'] +",";
-    line += registro['8040'] +"\r\n";
+    line = registro.Session_ID +"," + registro.Device_Name +"," + registro['8069'] +"," + registro['8070'] +",";
+    line += registro['8071'] +",";
+    line += registro['8072'] +",";
+    line += registro['8073'] +",";
+    line += registro['8074'] +",";
+    line += registro['8075'] +",";
+    line += registro['8076'] +",";
+    line += registro['8077'] +",";
+    line += registro['8078'] +"\r\n";
     csv += line;
   });
   
