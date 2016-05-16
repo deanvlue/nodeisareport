@@ -26,7 +26,7 @@ var campos = ["FIIdTienda", "FCNombre", "FDFechaFin", "8069", "8070", "8071", "8
 
 var sp = 'SPDetalleEncuestasFechas';
 var ahora = moment().startOf('week').add(1,'days').format('YYYY-MM-DD');
-var domingo_pasado = moment().startOf('week').subtract(7,'days').format('YYYY-MM-DD');
+var domingo_pasado = moment().startOf('week').subtract(6,'days').format('YYYY-MM-DD');
 
 
 var config = {
