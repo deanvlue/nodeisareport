@@ -11,6 +11,19 @@ moment().tz('America/Mexico_City');
 var azure = require('azure-storage');
 var reporte = require ('./reporte.json');
 
+//var sendgrid = require('sendgrid')('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');
+//api key=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
+
+/* var email     = new sendgrid.Email({
+              to:       "carlos.munoz@alsea.com.mx",
+              from:     'report_webjobs@vips.com.mx',
+              bcc:       ['carlos.munoz@alsea.com.mx', 'elias.carrillo@alsea.com.mx'],
+              cc:       cc_soporte,
+              subject:  store.fiidtienda+' '+ store.fcnombre +':Tableta VIPS ISA sin enviar datos en más de 2 Días',
+              text:     'Atencion ' + store.fiidtienda + ' ' + store.fcnombre + '\n Favor de levantar su ticket a la mesa de servicios de Alsea ya que la tableta de VIPS ISA en su unidad no ha enviado datos en más de 2 días \n Ultima fecha de Envío: ' + store.fdultimoenvio
+            });
+*/            
+
 var nconf = require('nconf');
 nconf.env()
      .file({ file: 'config.json', search: true });
@@ -57,6 +70,8 @@ var i=0;
   
 //   console.log(csv);
 // });
+
+md5Archivo('reporteisa.csv');
 
 connection.on('connect', function(err){
   //if no error inidcate that connection was succesful
@@ -188,11 +203,39 @@ function generaCSV(reporte){
   });
   
 
-  blobSvc.createBlockBlobFromText('isareporte', 'reporteisa.csv', csv, function(err, res, rep){
+  blobSvc.createBlockBlobFromText('isareporte', 'reporteisa_20160705.csv', csv, function(err, res, rep){
     if(err) console.log("Hubo un error" + err);
   
-    if(rep.isSuccessful)
+    if(rep.isSuccessful){
+      md5Archivo('reporteisa.csv');
       console.log("Archivo Guardado Exitosamente");
+    }
+      
+      
   });
+}
 
+function md5Archivo (nombreArchivo){
+  var azure = require('azure-storage');
+  var _ = require('underscore');
+
+  var nconf = require('nconf');
+  nconf.env()
+      .file({ file: 'config.json', search: true });
+
+  var accountName = nconf.get("STORAGE_NAME");
+  var accountKey = nconf.get("STORAGE_KEY");
+  var blobSvc = azure.createBlobService(accountName,accountKey);
+
+  var nombres=[];
+
+
+  blobSvc.listBlobsSegmented('isareporte',null,function(error, result, response){
+    if(response.statusCode===200){
+        //console.log(result.entries);
+        var a = _.where(result.entries,{name:nombreArchivo});
+        console.log(a[0].properties['content-md5']);
+        return a;
+    }
+  });
 }
